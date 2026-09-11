@@ -42,6 +42,7 @@ pycharm
 python313
 redis
 redisinsight-bin
+rtk-bin
 rustrover
 rustrover-jre
 slack-desktop
