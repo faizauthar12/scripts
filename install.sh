@@ -12,9 +12,21 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 case "$(uname -s)" in
-  Darwin) OS=macos ;;
-  Linux)  OS=arch ;;
-  *) echo "unsupported OS: $(uname -s)" >&2; exit 1 ;;
+  Darwin)
+    OS=macos
+    ;;
+  Linux)
+    if [[ -r /etc/os-release ]] && . /etc/os-release && [[ "$ID" == arch || "${ID_LIKE:-}" == *arch* ]]; then
+      OS=arch
+    else
+      echo "unsupported Linux distro: $(. /etc/os-release 2>/dev/null; echo "${PRETTY_NAME:-${ID:-unknown}}") — this script targets Arch only" >&2
+      exit 1
+    fi
+    ;;
+  *)
+    echo "unsupported OS: $(uname -s)" >&2
+    exit 1
+    ;;
 esac
 echo "==> detected OS: $OS"
 
