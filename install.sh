@@ -102,15 +102,10 @@ elif [[ "$OS" == macos ]]; then
 fi
 
 # --- 4. dotfiles: copy into place (not symlink) ------------------------------
-declare -A FILES=(
-  ["zsh/.zshrc"]="$HOME/.zshrc"
-  ["zsh/.zshenv"]="$HOME/.zshenv"
-  ["zsh/.zprofile"]="$HOME/.zprofile"
-  ["git/.gitconfig"]="$HOME/.gitconfig"
-)
-for src in "${!FILES[@]}"; do
-  dest="${FILES[$src]}"
-  if [[ -e "$dest" && ! -f "$dest.bak.$(date +%s)" ]]; then
+for pair in "zsh/.zshrc:$HOME/.zshrc" "zsh/.zshenv:$HOME/.zshenv" \
+            "zsh/.zprofile:$HOME/.zprofile" "git/.gitconfig:$HOME/.gitconfig"; do
+  src="${pair%%:*}"; dest="${pair#*:}"
+  if [[ -e "$dest" ]]; then
     cp -p "$dest" "$dest.bak.$(date +%s)" 2>/dev/null || true
     echo "backed up existing $dest"
   fi
