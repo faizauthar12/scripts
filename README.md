@@ -94,9 +94,9 @@ aliases — sourced for *every* zsh invocation (login, interactive,
 non-interactive scripts/`zsh -c`). Interactive-only bits (options, bindkeys,
 aliases) are gated behind `[[ $- == *i* ]]`. Genuinely OS-specific lines
 (Homebrew paths, `GOPATH` resolution, `gcr-ssh-agent` socket vs macOS
-ssh-agent fallback, LM Studio/Antigravity PATH additions) sit inline next to
-their shared equivalent behind `[[ "$(uname -s)" == Darwin ]]` checks, so a
-`diff` against either machine's live `~/.zshenv` stays small.
+ssh-agent fallback) sit inline next to their shared equivalent behind
+`[[ "$(uname -s)" == Darwin ]]` checks, so a `diff` against either machine's
+live `~/.zshenv` stays small.
 
 `zsh/.zprofile` is login-shell-only extras; today that's exclusively macOS
 blocks (Toolbox App, OrbStack, pyenv init, ssh-agent+Keychain fallback) since
