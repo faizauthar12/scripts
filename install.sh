@@ -210,7 +210,11 @@ fi
 # signed native binaries fetched by `caveman setup --install`, per
 # https://github.com/JuliusBrussee/caveman
 if ! command -v caveman >/dev/null; then
-  npm install -g @caveman-ai/cli
+  # npm's configured prefix (e.g. ~/.local via ~/.npmrc) can point at a
+  # directory whose lib/ subdir doesn't exist yet — `npm install -g` then
+  # fails with ENOENT before it ever reaches the network. Ensure it exists.
+  mkdir -p "$(npm config get prefix)/lib" 2>/dev/null || true
+  npm install -g @caveman-ai/cli || echo "caveman-ai/cli npm install failed, continuing" >&2
 fi
 caveman setup --install || echo "caveman setup --install failed, see above" >&2
 
