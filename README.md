@@ -49,6 +49,33 @@ interactive, non-interactive scripts/`zsh -c`). Interactive-only bits inside
 it (options, bindkeys, aliases) are gated behind `[[ $- == *i* ]]` so
 non-interactive shells don't pay for them.
 
+## SSH + gnome-keyring
+
+Matches how this machine actually works, confirmed by inspecting it live
+(not the old `gnome-keyring-daemon --start --components=ssh` way — that's
+superseded by `gcr-4`'s `gcr-ssh-agent`):
+
+- `gnome-keyring` + `gcr-4` packages (in `packages/pacman.txt` — on this
+  machine they're only pulled in as dependencies of other packages, so
+  listed explicitly here instead of hoping that keeps happening)
+- `systemctl --user enable --now gcr-ssh-agent.socket` — this is a
+  user-level enable (symlink lives in `~/.config/systemd/user/`, not a
+  package default), so `install.sh` does it explicitly. The socket sets
+  `SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh` in the systemd user environment
+  on activation; `.zshenv` also exports it directly as a fallback for
+  shells started outside that session (already there, machine-specific
+  block)
+- `ssh-keygen -t ed25519` generates a fresh key if `~/.ssh/id_ed25519`
+  doesn't exist yet (this machine's key is an older RSA one — ed25519 is
+  the current sane default for a new key, not a re-migration of the old one)
+- keyring auto-unlock at login (`pam_gnome_keyring.so` in
+  `/etc/pam.d/gdm-password`) ships with the `gdm` package itself — nothing
+  to script there
+- `gcr-ssh-agent` auto-discovers keys under `~/.ssh` on demand, no
+  `ssh-add`/`~/.ssh/config` needed (this machine has neither) — first use
+  pops a GUI passphrase prompt with a "remember" checkbox; that's the
+  one-time manual step that can't be scripted
+
 ## Hardware notes — ThinkPad T14 Gen1 (Intel)
 
 Source: [Arch Wiki — Lenovo ThinkPad T14/T14s (Intel) Gen 1](https://wiki.archlinux.org/title/Lenovo_ThinkPad_T14/T14s_(Intel)_Gen_1).
