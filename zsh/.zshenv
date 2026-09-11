@@ -62,3 +62,23 @@ export PATH="$PATH:/home/faizauthar/.lmstudio/bin"
 
 . "$HOME/.local/bin/env"
 export PATH=~/.npm-global/bin:$PATH
+
+# --- interactive-only below --------------------------------------------------
+[[ $- == *i* ]] || return 0
+
+setopt AUTO_CD EXTENDED_GLOB
+setopt HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_VERIFY SHARE_HISTORY
+setopt INTERACTIVE_COMMENTS
+bindkey -e
+
+alias ls='ls --color=auto'
+alias ll='ls -lah'
+alias grep='grep --color=auto'
+alias ..='cd ..'
+alias g='git'
+
+# thinkpad power-profile switcher via power-profiles-daemon
+# see hardware/check-thinkpad-t14.sh for the raw ACPI fallback
+alias pp-eco='powerprofilesctl set power-saver'
+alias pp-bal='powerprofilesctl set balanced'
+alias pp-perf='powerprofilesctl set performance'
