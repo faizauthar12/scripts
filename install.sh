@@ -137,6 +137,7 @@ done
 
 # --- 5. hardware-specific setup (Arch only) ----------------------------------
 if [[ "$OS" == arch ]]; then
+  ./hardware/detect-gpu.sh || echo "GPU driver detection skipped/failed, see above" >&2
   ./hardware/check-thinkpad-t14.sh || echo "hardware setup skipped/failed, see above"
 fi
 
