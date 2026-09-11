@@ -1,0 +1,14 @@
+android-commandlinetools
+android-platform-tools
+antigravity-cli
+claude-code
+gcloud-cli
+mongodb-compass
+mx-power-gadget
+ngrok
+orchard
+pear-desktop
+portkiller
+radix
+redis-insight
+visual-studio-code
