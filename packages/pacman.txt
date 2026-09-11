@@ -28,6 +28,7 @@ file-roller
 fvm
 fzf
 ttf-nerd-fonts-symbols
+gcr-4
 gdm
 geary
 ghex
@@ -38,6 +39,7 @@ git-lfs
 gitg
 github-cli
 glade
+gnome-keyring
 go
 gparted
 grilo-plugins
