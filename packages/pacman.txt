@@ -62,7 +62,6 @@ jdk-openjdk
 jdk17-openjdk
 kubectl
 less
-lib32-vulkan-radeon
 libreoffice-fresh
 libva-utils
 lightsoff
@@ -93,7 +92,6 @@ python-pipenv
 python-pyelftools
 qbittorrent
 quadrapassel
-radeontop
 readest
 reflector
 rust
@@ -125,7 +123,6 @@ uv
 vim
 vlc
 vlc-plugins-extra
-vulkan-radeon
 vulkan-validation-layers
 wezterm
 wget
