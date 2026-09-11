@@ -5,9 +5,10 @@
 # bits (options, bindkeys, aliases) are gated behind the check at the bottom.
 #
 # Shared config lives unconditionally below. Anything genuinely OS-specific
-# is gated on `uname -s` (Darwin vs Linux) inline, right next to the shared
-# equivalent, so the two machines' env stays diffable at a glance instead of
-# living in two separate files that drift apart.
+# is gated on $IS_MACOS (computed once here) inline, right next to the
+# shared equivalent, so the two machines' env stays diffable at a glance
+# instead of living in two separate files that drift apart.
+[[ "$(uname -s)" == Darwin ]] && IS_MACOS=1 || IS_MACOS=0
 
 # --- always-on: env vars, PATH ---------------------------------------------
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -34,7 +35,7 @@ export GOPRIVATE=github.com/faizauthar12/*,github.com/dbo-id/*,bitbucket.org/adm
 export GONOPROXY=$GOPRIVATE
 export GONOSUMDB=$GOPRIVATE
 
-if [[ "$(uname -s)" == Darwin ]]; then
+if (( IS_MACOS )); then
   # Go (Homebrew go ships its own GOPATH resolution)
   export PATH="$PATH:$(go env GOPATH)/bin"
 
@@ -52,9 +53,7 @@ fi
 
 # Flutter
 export PATH="$PATH:$HOME/bin/flutter/bin"
-if [[ "$(uname -s)" == Darwin ]]; then
-  export PATH="$HOME/fvm/bin:$PATH"  # fvm, flutter version manager
-fi
+(( IS_MACOS )) && export PATH="$HOME/fvm/bin:$PATH"  # fvm, flutter version manager
 
 # Android home path
 export ANDROID_HOME=$HOME/Android/Sdk
@@ -63,20 +62,14 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-# SSH agent socket
-if [[ "$(uname -s)" == Darwin ]]; then
-  # macOS: no gnome-keyring; ssh-agent + ssh-add fallback (see zsh/.zprofile)
-  :
-else
-  # Linux: gcr-ssh-agent.socket (enabled by install.sh) owns SSH_AUTH_SOCK
-  export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
-fi
+# SSH agent socket — Linux: gcr-ssh-agent.socket (enabled by install.sh) owns
+# SSH_AUTH_SOCK. macOS: no gnome-keyring; ssh-agent + ssh-add fallback lives
+# in zsh/.zprofile instead.
+(( IS_MACOS )) || export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 
 export USE_CCACHE=1
 export CCACHE_DIR=~/ccache
-if [[ "$(uname -s)" == Darwin ]]; then
-  export CCACHE_EXEC=/usr/bin/ccache
-fi
+(( IS_MACOS )) && export CCACHE_EXEC=/usr/bin/ccache
 
 # sccache
 export SCCACHE_DIR="$HOME/.cache/sccache"
@@ -85,16 +78,12 @@ export SCCACHE_CACHE_SIZE="150G"
 # Cargo
 export CARGO_HOME=$HOME/.cargo
 export PATH="$CARGO_HOME/bin:$PATH"
-if [[ "$(uname -s)" == Darwin ]]; then
-  export CARGO_BUILD_JOBS=2
-fi
+(( IS_MACOS )) && export CARGO_BUILD_JOBS=2
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-if [[ "$(uname -s)" == Darwin ]]; then
-  alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
-fi
+(( IS_MACOS )) && alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -103,7 +92,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # uv
 export PATH="$HOME/.local/bin:$PATH"
 
-if [[ "$(uname -s)" == Darwin ]]; then
+if (( IS_MACOS )); then
   # Added by LM Studio CLI (lms)
   export PATH="$PATH:$HOME/.lmstudio/bin"
   # End of LM Studio CLI section
@@ -131,7 +120,7 @@ alias grep='grep --color=auto'
 alias ..='cd ..'
 alias g='git'
 
-if [[ "$(uname -s)" == Darwin ]]; then
+if (( IS_MACOS )); then
   # bun completions
   [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
