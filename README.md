@@ -22,6 +22,7 @@ zsh/.zshenv                    # shared env/PATH/options/aliases, OS-specific li
                                 #  sed-patched in place by install.sh; see "zsh" section below)
 zsh/.zprofile                  # login-shell extras (currently macOS-only blocks; Arch needs none yet)
 git/.gitconfig                 # git identity, URL rewrites (ssh over https), git-lfs — shared
+hardware/detect-gpu.sh         # Arch: GPU vendor detection (sysfs) -> matching Vulkan/tools packages
 hardware/check-thinkpad-t14.sh # Arch/T14 Gen1 detection + quirks from Arch Wiki
 packages/pacman.txt             # Arch: explicit official-repo packages (pacman -Qqen)
 packages/aur.txt                 # Arch: explicit AUR packages (pacman -Qqem), incl.
@@ -101,6 +102,24 @@ their shared equivalent behind `[[ "$(uname -s)" == Darwin ]]` checks, so a
 blocks (Toolbox App, OrbStack, pyenv init, ssh-agent+Keychain fallback) since
 Arch doesn't need any at the moment — the file structure supports adding an
 Arch-only block the same way if that changes.
+
+## Arch GPU driver detection
+
+`vulkan-radeon`/`lib32-vulkan-radeon`/`radeontop` used to sit unconditionally
+in `packages/pacman.txt` — wrong on any Intel-only or NVIDIA machine.
+`hardware/detect-gpu.sh` reads `/sys/bus/pci/devices/*/{class,vendor}`
+directly (PCI class `0x03xxxx` = display controller, standard vendor IDs:
+`0x1002` AMD, `0x8086` Intel, `0x10de` NVIDIA — see
+[Modalias](https://wiki.archlinux.org/title/Modalias)) instead of shelling
+out to `lspci`, since `pciutils` isn't part of Arch's `base` and this way
+needs no extra dependency. Installs `vulkan-radeon`/`lib32-vulkan-radeon`/
+`radeontop` for AMD, `vulkan-intel`/`lib32-vulkan-intel`/`intel-gpu-tools`
+for Intel (handles hybrid graphics — both install if both vendors are
+found), and only prints a pointer to the
+[NVIDIA](https://wiki.archlinux.org/title/NVIDIA) wiki page for NVIDIA
+since the proprietary-vs-open driver choice isn't scriptable generically.
+Runs in `install.sh` before `check-thinkpad-t14.sh` since GPU vendor isn't
+T14-specific.
 
 ## Arch SSH + gnome-keyring
 
