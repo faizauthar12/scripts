@@ -25,3 +25,40 @@ export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export HISTSIZE=50000
 export SAVEHIST=50000
 [[ -d "${HISTFILE:h}" ]] || mkdir -p "${HISTFILE:h}"
+
+# --- machine-specific env, copied verbatim from this machine's .zshrc ------
+export GOPRIVATE=github.com/Aturjadwal/*,github.com/faizauthar12/*,github.com/dbo-id/*,github.com/21strive/*
+export GONOPROXY=github.com/Aturjadwal/*,github.com/faizauthar12/*,github.com/dbo-id/*,github.com/21strive/*
+export GONOSUMDB=github.com/Aturjadwal/*,github.com/faizauthar12/*,github.com/dbo-id/*,github.com/21strive/*
+export PATH="$PATH:$(go env GOPATH)/bin"
+
+# Flutter path
+export PATH="$PATH:$HOME/bin/flutter/bin"
+
+# Android home path
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
+
+export USE_CCACHE=1
+export CCACHE_EXEC=/usr/bin/ccache
+export CCACHE_DIR=~/ccache
+
+#sccache
+export SCCACHE_DIR="$HOME/.cache/sccache"
+export SCCACHE_CACHE_SIZE="150G"
+
+# Cargo
+export CARGO_HOME=$HOME/.cargo
+export PATH="$CARGO_HOME/bin:$PATH"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/faizauthar/.lmstudio/bin"
+# End of LM Studio CLI section
+
+. "$HOME/.local/bin/env"
+export PATH=~/.npm-global/bin:$PATH
