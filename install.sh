@@ -144,18 +144,21 @@ if [[ "$OS" == macos ]]; then
     echo "==> Hermes.app already in /Applications, skipping desktop install"
   else
     echo "==> downloading Hermes Desktop"
-    DMG=$(mktemp -t hermes-setup).dmg
-    curl -fsSL "https://hermes-assets.nousresearch.com/Hermes-Setup.dmg" -o "$DMG"
-    MOUNT=$(hdiutil attach "$DMG" -nobrowse -quiet | tail -1 | awk '{print $NF}')
-    APP_SRC=$(find "$MOUNT" -maxdepth 1 -iname "*.app" | head -1)
-    if [[ -n "$APP_SRC" ]]; then
-      cp -R "$APP_SRC" /Applications/
-      echo "installed $(basename "$APP_SRC") -> /Applications/"
+    if DMG=$(mktemp -t hermes-setup).dmg && \
+       curl -fsSL "https://hermes-assets.nousresearch.com/Hermes-Setup.dmg" -o "$DMG"; then
+      MOUNT=$(hdiutil attach "$DMG" -nobrowse -quiet | tail -1 | awk '{print $NF}')
+      APP_SRC=$(find "$MOUNT" -maxdepth 1 -iname "*.app" | head -1)
+      if [[ -n "$APP_SRC" ]]; then
+        cp -R "$APP_SRC" /Applications/
+        echo "installed $(basename "$APP_SRC") -> /Applications/"
+      else
+        echo "no .app bundle found in DMG, mounted at $MOUNT — install manually" >&2
+      fi
+      hdiutil detach "$MOUNT" -quiet || true
+      rm -f "$DMG"
     else
-      echo "no .app bundle found in DMG, mounted at $MOUNT — install manually" >&2
+      echo "Hermes Desktop download failed, continuing" >&2
     fi
-    hdiutil detach "$MOUNT" -quiet || true
-    rm -f "$DMG"
   fi
 fi
 
