@@ -126,10 +126,10 @@ fi
 # https://github.com/NousResearch/hermes-agent
 if command -v hermes >/dev/null; then
   echo "==> hermes CLI already installed, running hermes update"
-  hermes update || echo "hermes update failed/declined, continuing"
+  hermes update --yes || echo "hermes update failed, continuing" >&2
 else
   echo "==> installing Hermes Agent"
-  curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+  curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash || echo "Hermes install failed, continuing" >&2
 fi
 
 # Hermes Desktop: AUR package (hermes-agent-desktop, packages/aur.txt) already
