@@ -17,3 +17,31 @@ if [[ "$product" != *"ThinkPad T14"* ]]; then
   echo "Run 'sudo dmidecode -t baseboard' and check PSREF to confirm the exact model/gen." >&2
   exit 1
 fi
+
+echo "-> ThinkPad T14 confirmed. Installing Gen1-known packages..."
+sudo pacman -S --needed --noconfirm \
+  sof-firmware \
+  acpi_call-dkms \
+  power-profiles-daemon
+
+sudo systemctl enable --now power-profiles-daemon.service
+
+echo "modules-load.d: enabling acpi_call at boot"
+echo acpi_call | sudo tee /etc/modules-load.d/acpi_call.conf >/dev/null
+sudo modprobe acpi_call || true
+
+cat <<'EOF'
+
+Manual steps (can't be scripted — do these in firmware/BIOS):
+  1. Update BIOS/firmware BEFORE touching Secure Boot keys.
+     Deleting keys on old firmware can brick the mainboard.
+  2. Set BIOS > Config > Power > Sleep = "Linux" for working S3 suspend.
+  3. If GPU/CPU throttles at ~57C on battery, switch to performance mode
+     (see aliases pp-eco / pp-bal / pp-perf in .zshenv, or raw ACPI calls
+     below if power-profiles-daemon isn't available):
+       economy:     echo '\_SB.PCI0.LPCB.EC._Q6F' | sudo tee /proc/acpi/call
+       balanced:    echo '\_SB.PCI0.LPCB.EC._Q6E' | sudo tee /proc/acpi/call
+       performance: echo '\_SB.PCI0.LPCB.EC._Q6D' | sudo tee /proc/acpi/call
+  4. Check turbo boost is on: cat /sys/devices/system/cpu/intel_pstate/no_turbo
+     (0 = enabled, 1 = disabled -> reset BIOS to defaults)
+EOF
