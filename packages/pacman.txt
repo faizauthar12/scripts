@@ -17,7 +17,6 @@ devhelp
 docker
 docker-buildx
 docker-compose
-endeavour
 eog
 epiphany
 erofs-utils
