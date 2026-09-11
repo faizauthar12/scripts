@@ -49,3 +49,8 @@ done
 
 # default shell -> zsh
 [[ "$SHELL" == */zsh ]] || chsh -s "$(command -v zsh)"
+
+# --- 4. hardware-specific setup ------------------------------------------------
+./hardware/check-thinkpad-t14.sh || echo "hardware setup skipped/failed, see above"
+
+echo "done."
