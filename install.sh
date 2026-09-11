@@ -192,7 +192,7 @@ else
   if ! claude mcp get context7 >/dev/null 2>&1; then
     if [[ -n "${CONTEXT7_API_KEY:-}" ]]; then
       claude mcp add --scope user --header "Authorization: Bearer ${CONTEXT7_API_KEY}" \
-        --transport http context7 https://mcp.context7.com/mcp
+        --transport http context7 https://mcp.context7.com/mcp || echo "context7 MCP registration failed, continuing" >&2
     else
       echo "CONTEXT7_API_KEY not set — skipping context7 MCP registration" >&2
     fi
