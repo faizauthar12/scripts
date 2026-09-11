@@ -103,6 +103,17 @@ blocks (Toolbox App, OrbStack, pyenv init, ssh-agent+Keychain fallback) since
 Arch doesn't need any at the moment — the file structure supports adding an
 Arch-only block the same way if that changes.
 
+## Arch pacman.conf: multilib
+
+`[core]`/`[extra]` ship enabled by default; `[multilib]` ships commented out
+and needs uncommenting for `lib32-*` packages (installed conditionally by
+`hardware/detect-gpu.sh` — see below). `install.sh` checks `grep -q
+'^\[multilib\]' /etc/pacman.conf` first and only runs `sed` if it's not
+already uncommented — a real idempotency check, not just a repeatable sed
+pattern, since running the sed against an already-enabled block would be a
+silent no-op anyway but skipping it avoids invoking `sudo` unnecessarily on
+every re-run.
+
 ## Arch GPU driver detection
 
 `vulkan-radeon`/`lib32-vulkan-radeon`/`radeontop` used to sit unconditionally
