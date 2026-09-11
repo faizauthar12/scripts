@@ -33,7 +33,27 @@ ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 [[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]] || \
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 
-# --- 3. dotfiles symlinks ------------------------------------------------------
+# --- 3. ssh key + gnome-keyring ssh-agent (matches this machine) ------------
+# gnome-keyring/gcr-4 are here as dependencies of other packages on this
+# machine (not explicit), and the socket that wires SSH_AUTH_SOCK to it is a
+# user-level enable, not a package default — both need doing explicitly.
+systemctl --user enable --now gcr-ssh-agent.socket
+
+if [[ ! -f "$HOME/.ssh/id_ed25519" ]]; then
+  mkdir -p -m 700 "$HOME/.ssh"
+  ssh-keygen -t ed25519 -C "faizauthar@gmail.com" -f "$HOME/.ssh/id_ed25519"
+fi
+
+cat <<'EOF'
+
+SSH key ready. gcr-ssh-agent auto-discovers keys in ~/.ssh — no ssh-add
+needed. First use (first git push / ssh) pops a GUI passphrase prompt with
+an "automatically unlock" checkbox; tick it once and gnome-keyring unlocks
+the key at every login after that (same as this machine, via PAM in
+/etc/pam.d/gdm-password — shipped by the gdm package, nothing to script).
+EOF
+
+# --- 4. dotfiles symlinks ------------------------------------------------------
 declare -A LINKS=(
   ["zsh/.zshenv"]="$HOME/.zshenv"
 )
@@ -50,7 +70,7 @@ done
 # default shell -> zsh
 [[ "$SHELL" == */zsh ]] || chsh -s "$(command -v zsh)"
 
-# --- 4. hardware-specific setup ------------------------------------------------
+# --- 5. hardware-specific setup ------------------------------------------------
 ./hardware/check-thinkpad-t14.sh || echo "hardware setup skipped/failed, see above"
 
 echo "done."
