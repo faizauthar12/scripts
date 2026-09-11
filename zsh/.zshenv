@@ -53,7 +53,7 @@ fi
 # Flutter
 export PATH="$PATH:$HOME/bin/flutter/bin"
 if [[ "$(uname -s)" == Darwin ]]; then
-  export PATH="/Users/faizauthar/fvm/bin:$PATH"  # fvm, flutter version manager
+  export PATH="$HOME/fvm/bin:$PATH"  # fvm, flutter version manager
 fi
 
 # Android home path
@@ -101,11 +101,11 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # uv
-export PATH="/Users/faizauthar/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 if [[ "$(uname -s)" == Darwin ]]; then
   # Added by LM Studio CLI (lms)
-  export PATH="$PATH:/home/faizauthar/.lmstudio/bin"
+  export PATH="$PATH:$HOME/.lmstudio/bin"
   # End of LM Studio CLI section
 
   . "$HOME/.local/bin/env"
