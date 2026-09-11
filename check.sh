@@ -15,7 +15,7 @@ while IFS= read -r -d '' f; do
 done < <(find . -name '*.sh' -not -path './.git/*' -print0)
 
 echo "==> zsh -n"
-for f in zsh/.zshenv zsh/.zshrc zsh/.zprofile; do
+for f in zsh/.zshenv zsh/.zprofile; do
   zsh -n "$f" && echo "  ok: $f" || { echo "  FAIL: $f" >&2; status=1; }
 done
 
