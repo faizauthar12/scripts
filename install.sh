@@ -15,3 +15,20 @@ if ! command -v yay >/dev/null; then
   (cd /tmp/yay-bin && makepkg -si --noconfirm)
 fi
 yay -S --needed --noconfirm - < packages/aur.txt
+
+# --- 2. oh-my-zsh: let its installer generate the stock .zshrc, then patch --
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+  RUNZSH=no CHSH=no sh -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+# zsh-syntax-highlighting must be the LAST plugin sourced (its own docs say so)
+sed -i 's/^ZSH_THEME=.*/ZSH_THEME="agnoster"/' "$HOME/.zshrc"
+sed -i 's/^plugins=(git)$/plugins=(git archlinux systemd zsh-autosuggestions fzf zsh-syntax-highlighting)/' "$HOME/.zshrc"
+
+# clone commands as listed in each plugin's own INSTALL.md (Oh My Zsh section)
+ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+[[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]] || \
+  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+[[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]] || \
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
