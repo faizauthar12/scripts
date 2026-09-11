@@ -92,19 +92,17 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # uv
 export PATH="$HOME/.local/bin:$PATH"
 
-if (( IS_MACOS )); then
-  # Added by LM Studio CLI (lms)
-  export PATH="$PATH:$HOME/.lmstudio/bin"
-  # End of LM Studio CLI section
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:$HOME/.lmstudio/bin"
+# End of LM Studio CLI section
 
-  . "$HOME/.local/bin/env"
-  export PATH=~/.npm-global/bin:$PATH
+. "$HOME/.local/bin/env"
+export PATH=~/.npm-global/bin:$PATH
 
-  # Added by Antigravity CLI installer / cua-driver-rs installer (same path, both append it)
-  export PATH="$HOME/.local/bin:$PATH"
+# Added by Antigravity CLI installer / cua-driver-rs installer (same path, both append it)
+export PATH="$HOME/.local/bin:$PATH"
 
-  export CONTEXT7_API_KEY="ctx7sk-76eaf396-a26d-44de-97be-215574b2cb68"
-fi
+export CONTEXT7_API_KEY="ctx7sk-76eaf396-a26d-44de-97be-215574b2cb68"
 
 # --- interactive-only below --------------------------------------------------
 [[ $- == *i* ]] || return 0
