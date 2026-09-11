@@ -32,6 +32,15 @@ echo "==> detected OS: $OS"
 
 # --- 1. packages -------------------------------------------------------------
 if [[ "$OS" == arch ]]; then
+  # [core]/[extra] ship enabled by default; [multilib] ships commented out —
+  # needed for lib32-* packages installed conditionally by hardware/detect-gpu.sh.
+  # Idempotent: strips a leading `#` from the [multilib] line and the one
+  # right after it; a no-op if already uncommented.
+  if ! grep -q '^\[multilib\]' /etc/pacman.conf; then
+    echo "enabling [multilib] repository in /etc/pacman.conf..."
+    sudo sed -i '/^#\[multilib\]/,+1s/^#//' /etc/pacman.conf
+  fi
+
   sudo pacman -Syu --needed --noconfirm - < packages/pacman.txt
 
   if ! command -v yay >/dev/null; then
