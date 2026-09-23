@@ -56,13 +56,14 @@ hitori
 hplip
 iagno
 iw
-jack2
 jadx
 jdk-openjdk
 jdk17-openjdk
 kubectl
 less
 libreoffice-fresh
+lib32-pipewire-jack
+pipewire-jack
 libva-utils
 lightsoff
 loupe

@@ -4,7 +4,7 @@ android-studio
 android-studio-for-platform
 aosp-devel
 apple-fonts
-aws-cli-v2-bin
+aws-cli-v2
 basemark
 cheese
 claude-code
@@ -15,7 +15,6 @@ cloudflare-warp-bin
 datagrip
 datagrip-jre
 discord_arch_electron
-geekbench
 goland
 goland-jre
 google-chrome-dev
@@ -35,10 +34,8 @@ modprobed-db
 mongodb-bin
 mongodb-compass-bin
 ncurses5-compat-libs
-neofetch
 ntfsplus-dkms-git
 postman-bin
-pycharm
 python313
 redis
 redisinsight-bin
@@ -47,7 +44,6 @@ rustrover
 rustrover-jre
 slack-desktop
 spotify
-steam-native-runtime
 termius
 ventoy-bin
 visual-studio-code-bin
